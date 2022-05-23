@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etch-A-Sketch</title>
+
+    <link rel="stylesheet" href="style.css">
+
+  </head>
+
+  <body>
+      <div id="container">
+
+        <!-- div that will contain the color picker so I can round the edges-->
+        <div id="roundColor">
+          <!-- color picker input starting at black-->
+          <input type="color" id="colorPicker" value="#000000">
+        </div>
+
+        <!-- creates a slider with a range of 1 to 64 starting at 16 -->
+        <input type="range" min="1" max="64" value="16" class="slider" id="sliderValue">
+
+        <!-- <span> tag is an inline container used to mark up a part of a text, or a part of a document-->
+        <p><span id="slideText"></span></p>
+        
+        <!-- creates a button with a value clear and when button is clicked clearGrid function is fed the this.value (clear)-->
+        <button type="button" value="clear" class="button" onClick="clearGrid(this.value)">Clear Grid</button>
+
+         <!-- creates a button with a value rainbow and when button is clicked rainbowMode function is fed the this.value (rainbow)-->
+        <button type="button" value="rainbow" class="button" onClick="rainbowMode(this.value)">Rainbow Mode</button>
+
+        <div id="grid" class="grid"></div>
+      </div>
+
+      <script src="script.js"></script>
+  </body>
+</html>
