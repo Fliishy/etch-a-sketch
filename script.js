@@ -66,8 +66,39 @@ grid.addEventListener("mouseleave", function () { mouseDown = 0});
 grid.addEventListener("mouseover", gridColor);
 grid.addEventListener("mousedown", gridColor);
 
+// initialises variables for the coloring modes
+let colorMode = 1;
+let rainbowMode = 0;
+let eraserMode = 0;
+
+// variables are set to 1 or 0 depending on if the mode is already on (1) or off (0)
+function mode(clicked_value) {
+    if (clicked_value == "color") {
+        colorMode = 1;
+        rainbowMode = 0;
+        eraserMode = 0;
+    }
+
+    else if (clicked_value == "rainbow") {
+        colorMode = 0;
+        rainbowMode = 1;
+        eraserMode = 0;
+    }
+
+    else if (clicked_value == "eraser") {
+        colorMode = 0;
+        rainbowMode = 0;
+        eraserMode = 1;
+    }
+}
+
 // gets the color input from the html and when used with color.value changes the color of the pen
 let color = document.getElementById("colorPicker");
+
+// gets the round color input for adding a shadow
+let shadowColor = document.getElementById("roundColor");
+
+color.addEventListener("mouseleave", function () {shadowColor.style.boxShadow = `1px 1px 8px 1px ${color.value}`; });
 
 function gridColor(event) {
 
@@ -75,23 +106,47 @@ function gridColor(event) {
     // in this prevent default runs if mousedown != 1 and className doesnt start with grid
     event.preventDefault();
 
-    if(mouseDown && event.target.className.startsWith("grid-element") ) {
-    // .target will target the object on which the event is run i.e. grid
+    if (mouseDown && event.target.className.startsWith("grid-element")) {
+    // .target will target the object on which the event is run i.e. grid-element
     // classList.add will add the class grow-grid which in css is the transform animation
       event.target.classList.add("grow-grid");
 
-      // turns the background and border colors red when the if statement is true
-      event.target.style.backgroundColor = color.value;
-      event.target.style.border = color.value;
+        if (colorMode == 1) {
+            // turns the background and border colors to color.value when the if statement is true
+            event.target.style.backgroundColor = color.value;
+            event.target.style.border = color.value;
+            shadowColor.style.boxShadow = `1px 1px 8px 1px ${color.value}`;
 
-      // setTimeout will run a function after a certain amount of time has passed in this case 0.05s
-      setTimeout(function() {event.target.classList.remove("grow-grid")}, 50);
+            setTimeout(function() {event.target.classList.remove("grow-grid")}, 50);
+        }
+
+        else if (rainbowMode == 1) {
+            // initialises a random color 
+            const randomColor = Math.floor(Math.random()*16777215).toString(16);
+
+            // turns the background and border colors to random color
+            event.target.style.backgroundColor = "#" + randomColor;
+            event.target.style.border = "#" + randomColor;
+            color.value = "#" + randomColor;
+            shadowColor.style.boxShadow = `1px 1px 8px 1px #${randomColor}`;
+
+            // setTimeout will run a function after a certain amount of time has passed in this case 0.05s
+            setTimeout(function() {event.target.classList.remove("grow-grid")}, 50);
+        }
+
+        else if (eraserMode == 1) {
+            event.target.style.backgroundColor = "white";
+            event.target.style.border = "1px solid #f0f0f0";
+
+            shadowColor.style.boxShadow = `1px 1px 8px 1px ${color.value}`;
+
+            setTimeout(function() {event.target.classList.remove("grow-grid")}, 50);
+        }
     }
 }
 
 // takes the value of a clicked button and clears grid if the value is clear
-function clearGrid(clicked_value)
-{
+function clearGrid(clicked_value) {
    if (clicked_value == "clear") {
 
         // same as the slider input. Creates an array out of the div elements
@@ -109,4 +164,5 @@ function clearGrid(clicked_value)
 
 window.onload = () => {
     gridSetup(sliderValue);
+    shadowColor.style.boxShadow = `1px 1px 8px 1px ${color.value}`;
 }
